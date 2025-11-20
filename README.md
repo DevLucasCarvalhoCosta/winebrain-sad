@@ -9,6 +9,7 @@
 ![Machine Learning](https://img.shields.io/badge/ML-Scikit--learn-orange)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688)
 ![Status](https://img.shields.io/badge/Status-Conclu%C3%ADdo-success)
+![Deploy Status](https://github.com/DevLucasCarvalhoCosta/winebrain-sad/actions/workflows/deploy.yml/badge.svg)
 
 **Sistema completo end-to-end:** Dados → Machine Learning → Regras de Negócio → API → Interface Web
 
