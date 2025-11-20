@@ -161,6 +161,7 @@ jobs:
             cd "$COMPOSE_DIR"
             
             docker-compose build \
+              --no-cache \
               --build-arg VITE_API_BASE_URL=https://patrimonioueg.duckdns.org/winebrain/api \
               winebrain-backend winebrain-frontend || log_error "Build falhou!"
             
