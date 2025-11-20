@@ -1,0 +1,25 @@
+{
+  "data_analise": "2025-11-19T22:30:26.216021",
+  "total_clientes": 100,
+  "estatisticas_engajamento": {
+    "media": 6.079199999999999,
+    "min": 1.63,
+    "max": 9.88
+  },
+  "estatisticas_financeiras": {
+    "total_gasto_medio": 68.8539,
+    "total_gasto_min": 0.0,
+    "total_gasto_max": 386.5,
+    "ticket_medio": 68.8539
+  },
+  "segmentacao": {
+    "cancelamentos": {
+      "Não": 55,
+      "Sim": 45
+    },
+    "assinantes_clube": {
+      "Sim": 66,
+      "Não": 34
+    }
+  }
+}

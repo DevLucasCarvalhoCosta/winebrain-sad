@@ -1,0 +1,10 @@
+{
+  "name": "winebrain-frontend",
+  "version": "1.0.0",
+  "description": "Frontend do WineBrain - Sistema de Apoio à Decisão",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
