@@ -7,18 +7,9 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
-import sys
-import os
-
-# Tentar importar pandas com tratamento de erro
-try:
-    import pandas as pd
-    PANDAS_AVAILABLE = True
-except ImportError as e:
-    PANDAS_AVAILABLE = False
-    print(f"Pandas não disponível: {e}")
-
+import pandas as pd
 from pathlib import Path
+import os
 
 # Configuração
 app = FastAPI(
@@ -28,19 +19,11 @@ app = FastAPI(
     docs_url="/docs"
 )
 
-# CORS
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
-allowed_origins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    frontend_url,
-    "https://*.vercel.app"
-]
-
+# CORS - Configuração permissiva para desenvolvimento e produção
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
+    allow_origins=["*"],  # Permitir todas as origens por enquanto
+    allow_credentials=False,  # Desabilitar credentials quando allow_origins é "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -191,39 +174,31 @@ def avaliar_cliente(cliente: pd.Series) -> Dict[str, Any]:
     }
 
 def carregar_dados():
-    """Carrega dados com fallback para múltiplos caminhos"""
+    """Carrega dados com fallback para múltiplos caminhos - com lazy loading"""
     global clientes_df, produtos_df, compras_df
     
-    if not PANDAS_AVAILABLE:
-        print("⚠️ Pandas não disponível - dados não serão carregados")
-        return
+    # Se já carregados, retornar
+    if clientes_df is not None:
+        return True
     
     # Tentar múltiplos caminhos possíveis
     possible_paths = [
         Path(__file__).parent.parent / "app_data",  # Caminho local
         Path("/var/task/app_data"),  # Vercel serverless
         Path("./app_data"),  # Relativo
-        Path("/var/task") / "app_data",  # Vercel alternativo
     ]
     
     data_dir = None
     for path in possible_paths:
-        print(f"Verificando caminho: {path} (existe: {path.exists()})")
-        if path.exists():
-            data_dir = path
-            print(f"✓ Caminho encontrado: {data_dir}")
-            break
+        try:
+            if path.exists():
+                data_dir = path
+                break
+        except Exception:
+            continue
     
     if data_dir is None:
-        print(f"⚠️ Nenhum diretório de dados encontrado.")
-        print(f"   Current dir: {Path.cwd()}")
-        print(f"   File location: {Path(__file__).resolve()}")
-        # Listar arquivos no diretório atual
-        try:
-            print(f"   Arquivos em /var/task: {list(Path('/var/task').iterdir()) if Path('/var/task').exists() else 'N/A'}")
-        except Exception as e:
-            print(f"   Erro ao listar: {e}")
-        return
+        return False
     
     try:
         clientes_df = pd.read_csv(data_dir / "processed" / "clientes_agregado.csv")
@@ -235,68 +210,33 @@ def carregar_dados():
         clientes_df['cancelou'] = clientes_df['cancelou'].map({'Sim': True, 'Não': False})
         clientes_df = clientes_df.fillna(0)
         
-        print(f"✓ Dados carregados com sucesso de {data_dir}")
-        print(f"  - {len(clientes_df)} clientes")
-        print(f"  - {len(produtos_df)} produtos")
-        print(f"  - {len(compras_df)} compras")
-    except Exception as e:
-        print(f"✗ Erro ao carregar dados: {e}")
-        import traceback
-        traceback.print_exc()
-
-@app.on_event("startup")
-async def startup_event():
-    """Carrega dados na inicialização"""
-    try:
-        print("=== Iniciando carregamento de dados ===")
-        carregar_dados()
-        print("=== Carregamento concluído ===")
-    except Exception as e:
-        print(f"✗ Erro no startup: {e}")
-        import traceback
-        traceback.print_exc()
+        return True
+    except Exception:
+        return False
 
 # Endpoints
 @app.get("/")
 async def root():
-    """Endpoint raiz com informações de debug"""
+    """Endpoint raiz"""
     return {
         "app": "WineBrain API",
         "version": "1.0.0",
-        "status": "online",
-        "pandas_available": PANDAS_AVAILABLE,
-        "python_version": sys.version,
-        "current_dir": str(Path.cwd()),
-        "file_location": str(Path(__file__).resolve())
+        "status": "online"
     }
 
 @app.get("/api/health")
 async def health_check():
-    """Health check com informações detalhadas"""
-    health_info = {
+    """Health check com tentativa de carregamento"""
+    carregar_dados()
+    return {
         "status": "healthy",
-        "pandas_available": PANDAS_AVAILABLE,
-        "data_loaded": clientes_df is not None if PANDAS_AVAILABLE else False,
+        "data_loaded": clientes_df is not None,
+        "total_clientes": len(clientes_df) if clientes_df is not None else 0
     }
-    
-    if PANDAS_AVAILABLE and clientes_df is not None:
-        health_info["total_clientes"] = len(clientes_df)
-    
-    # Verificar caminhos de dados
-    possible_paths = [
-        Path(__file__).parent.parent / "app_data",
-        Path("/var/task/app_data"),
-        Path("./app_data"),
-    ]
-    
-    health_info["checked_paths"] = [
-        {"path": str(p), "exists": p.exists()} for p in possible_paths
-    ]
-    
-    return health_info
 
 @app.get("/api/dashboard/stats", response_model=DashboardStats)
 async def get_dashboard_stats():
+    carregar_dados()
     if clientes_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
@@ -311,6 +251,7 @@ async def get_dashboard_stats():
 
 @app.get("/api/dashboard/top-clientes")
 async def get_top_clientes(limit: int = Query(10, ge=1, le=100)):
+    carregar_dados()
     if clientes_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
@@ -319,6 +260,7 @@ async def get_top_clientes(limit: int = Query(10, ge=1, le=100)):
 
 @app.get("/api/dashboard/produtos/top")
 async def get_top_produtos(limit: int = Query(10, ge=1, le=100)):
+    carregar_dados()
     if compras_df is None or produtos_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
@@ -333,6 +275,7 @@ async def get_top_produtos(limit: int = Query(10, ge=1, le=100)):
 
 @app.get("/api/dashboard/vendas/{tipo}")
 async def get_vendas_por_tipo(tipo: str):
+    carregar_dados()
     if compras_df is None or produtos_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
@@ -350,6 +293,7 @@ async def get_vendas_por_tipo(tipo: str):
 
 @app.get("/api/analytics/segmentacao")
 async def get_segmentacao():
+    carregar_dados()
     if clientes_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
@@ -373,6 +317,7 @@ async def get_segmentacao():
 
 @app.get("/api/clientes", response_model=List[ClienteResponse])
 async def get_clientes(limit: int = Query(100, ge=1, le=1000), offset: int = Query(0, ge=0)):
+    carregar_dados()
     if clientes_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
@@ -381,6 +326,7 @@ async def get_clientes(limit: int = Query(100, ge=1, le=1000), offset: int = Que
 
 @app.get("/api/clientes/{cliente_id}", response_model=ClienteResponse)
 async def get_cliente(cliente_id: int):
+    carregar_dados()
     if clientes_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
@@ -392,6 +338,7 @@ async def get_cliente(cliente_id: int):
 
 @app.get("/api/clientes/{cliente_id}/recomendacao", response_model=RecomendacaoResponse)
 async def get_recomendacao(cliente_id: int):
+    carregar_dados()
     if clientes_df is None:
         raise HTTPException(status_code=503, detail="Dados não carregados")
     
