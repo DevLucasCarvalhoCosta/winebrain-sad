@@ -7,9 +7,18 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
-import pandas as pd
-from pathlib import Path
+import sys
 import os
+
+# Tentar importar pandas com tratamento de erro
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ImportError as e:
+    PANDAS_AVAILABLE = False
+    print(f"Pandas não disponível: {e}")
+
+from pathlib import Path
 
 # Configuração
 app = FastAPI(
@@ -185,21 +194,35 @@ def carregar_dados():
     """Carrega dados com fallback para múltiplos caminhos"""
     global clientes_df, produtos_df, compras_df
     
+    if not PANDAS_AVAILABLE:
+        print("⚠️ Pandas não disponível - dados não serão carregados")
+        return
+    
     # Tentar múltiplos caminhos possíveis
     possible_paths = [
         Path(__file__).parent.parent / "app_data",  # Caminho local
         Path("/var/task/app_data"),  # Vercel serverless
         Path("./app_data"),  # Relativo
+        Path("/var/task") / "app_data",  # Vercel alternativo
     ]
     
     data_dir = None
     for path in possible_paths:
+        print(f"Verificando caminho: {path} (existe: {path.exists()})")
         if path.exists():
             data_dir = path
+            print(f"✓ Caminho encontrado: {data_dir}")
             break
     
     if data_dir is None:
-        print(f"⚠️ Nenhum diretório de dados encontrado. Tentados: {possible_paths}")
+        print(f"⚠️ Nenhum diretório de dados encontrado.")
+        print(f"   Current dir: {Path.cwd()}")
+        print(f"   File location: {Path(__file__).resolve()}")
+        # Listar arquivos no diretório atual
+        try:
+            print(f"   Arquivos em /var/task: {list(Path('/var/task').iterdir()) if Path('/var/task').exists() else 'N/A'}")
+        except Exception as e:
+            print(f"   Erro ao listar: {e}")
         return
     
     try:
@@ -213,6 +236,9 @@ def carregar_dados():
         clientes_df = clientes_df.fillna(0)
         
         print(f"✓ Dados carregados com sucesso de {data_dir}")
+        print(f"  - {len(clientes_df)} clientes")
+        print(f"  - {len(produtos_df)} produtos")
+        print(f"  - {len(compras_df)} compras")
     except Exception as e:
         print(f"✗ Erro ao carregar dados: {e}")
         import traceback
@@ -221,16 +247,53 @@ def carregar_dados():
 @app.on_event("startup")
 async def startup_event():
     """Carrega dados na inicialização"""
-    carregar_dados()
+    try:
+        print("=== Iniciando carregamento de dados ===")
+        carregar_dados()
+        print("=== Carregamento concluído ===")
+    except Exception as e:
+        print(f"✗ Erro no startup: {e}")
+        import traceback
+        traceback.print_exc()
 
 # Endpoints
+@app.get("/")
+async def root():
+    """Endpoint raiz com informações de debug"""
+    return {
+        "app": "WineBrain API",
+        "version": "1.0.0",
+        "status": "online",
+        "pandas_available": PANDAS_AVAILABLE,
+        "python_version": sys.version,
+        "current_dir": str(Path.cwd()),
+        "file_location": str(Path(__file__).resolve())
+    }
+
 @app.get("/api/health")
 async def health_check():
-    return {
+    """Health check com informações detalhadas"""
+    health_info = {
         "status": "healthy",
-        "data_loaded": clientes_df is not None,
-        "total_clientes": len(clientes_df) if clientes_df is not None else 0
+        "pandas_available": PANDAS_AVAILABLE,
+        "data_loaded": clientes_df is not None if PANDAS_AVAILABLE else False,
     }
+    
+    if PANDAS_AVAILABLE and clientes_df is not None:
+        health_info["total_clientes"] = len(clientes_df)
+    
+    # Verificar caminhos de dados
+    possible_paths = [
+        Path(__file__).parent.parent / "app_data",
+        Path("/var/task/app_data"),
+        Path("./app_data"),
+    ]
+    
+    health_info["checked_paths"] = [
+        {"path": str(p), "exists": p.exists()} for p in possible_paths
+    ]
+    
+    return health_info
 
 @app.get("/api/dashboard/stats", response_model=DashboardStats)
 async def get_dashboard_stats():
