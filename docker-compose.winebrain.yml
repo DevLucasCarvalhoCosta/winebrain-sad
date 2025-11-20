@@ -1,0 +1,56 @@
+# ============================================
+# WineBrain - Docker Compose para Servidor UEG
+# 
+# Para adicionar ao docker-compose.yml principal:
+# Copie as seções abaixo para o arquivo principal
+# ============================================
+
+version: '3.8'
+
+networks:
+  winebrain_network:
+  proxy_network:
+
+services:
+  winebrain-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: winebrain-backend
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - API_ENV=production
+    volumes:
+      # Mapear dados processados
+      - ./data/processed:/app/app_data/processed:ro
+      - ./data/raw:/app/app_data/raw:ro
+      - ./data/models:/app/app_data/models:ro
+    networks:
+      - winebrain_network
+      - proxy_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/api/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  winebrain-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # API URL relativa ao servidor (será acessada via proxy)
+        VITE_API_BASE_URL: https://patrimonioueg.duckdns.org/winebrain/api
+    container_name: winebrain-frontend
+    restart: unless-stopped
+    networks:
+      - winebrain_network
+      - proxy_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
