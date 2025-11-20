@@ -181,13 +181,26 @@ def avaliar_cliente(cliente: pd.Series) -> Dict[str, Any]:
         }
     }
 
-@app.on_event("startup")
-async def startup_event():
-    """Carrega dados na inicialização"""
+def carregar_dados():
+    """Carrega dados com fallback para múltiplos caminhos"""
     global clientes_df, produtos_df, compras_df
     
-    base_dir = Path(__file__).parent.parent
-    data_dir = base_dir / "app_data"
+    # Tentar múltiplos caminhos possíveis
+    possible_paths = [
+        Path(__file__).parent.parent / "app_data",  # Caminho local
+        Path("/var/task/app_data"),  # Vercel serverless
+        Path("./app_data"),  # Relativo
+    ]
+    
+    data_dir = None
+    for path in possible_paths:
+        if path.exists():
+            data_dir = path
+            break
+    
+    if data_dir is None:
+        print(f"⚠️ Nenhum diretório de dados encontrado. Tentados: {possible_paths}")
+        return
     
     try:
         clientes_df = pd.read_csv(data_dir / "processed" / "clientes_agregado.csv")
@@ -199,9 +212,16 @@ async def startup_event():
         clientes_df['cancelou'] = clientes_df['cancelou'].map({'Sim': True, 'Não': False})
         clientes_df = clientes_df.fillna(0)
         
-        print("✓ Dados carregados com sucesso")
+        print(f"✓ Dados carregados com sucesso de {data_dir}")
     except Exception as e:
         print(f"✗ Erro ao carregar dados: {e}")
+        import traceback
+        traceback.print_exc()
+
+@app.on_event("startup")
+async def startup_event():
+    """Carrega dados na inicialização"""
+    carregar_dados()
 
 # Endpoints
 @app.get("/api/health")

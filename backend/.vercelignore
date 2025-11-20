@@ -1,0 +1,3 @@
+# Não ignorar nada crítico - incluir dados no deploy
+!app_data/
+!app_data/**/*
