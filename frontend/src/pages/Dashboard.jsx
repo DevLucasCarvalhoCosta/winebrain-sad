@@ -139,11 +139,11 @@ function Dashboard() {
             <Wine className="h-5 w-5 mr-2 text-red-500" />
             Vendas por Tipo de Uva
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={350}>
             <BarChart 
               data={vendasUva} 
               layout="vertical"
-              margin={{ top: 5, right: 80, left: 100, bottom: 5 }}
+              margin={{ top: 10, right: 80, left: 100, bottom: 10 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis type="number" stroke="#9ca3af" />
@@ -161,7 +161,7 @@ function Dashboard() {
                 dataKey="value" 
                 fill="#dc2626"
                 radius={[0, 8, 8, 0]}
-                barSize={25}
+                barSize={30}
                 label={{ 
                   position: 'right',
                   fill: '#fff',
