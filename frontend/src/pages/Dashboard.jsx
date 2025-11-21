@@ -8,8 +8,8 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
 import { 
-  getDashboardStats, getTopClientes, getTopProdutos, 
-  getVendasTipoUva, getVendasPais, getSegmentacao 
+  getDashboardStats, getTopClientes, getTopProdutos, getRankingProdutosDetalhado,
+  getVendasTipoUva, getVendasPais, getSegmentacao, getVendasTemporal 
 } from '../services/api';
 
 const COLORS = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
@@ -20,12 +20,52 @@ function Dashboard() {
   const [topProdutos, setTopProdutos] = useState([]);
   const [vendasUva, setVendasUva] = useState([]);
   const [vendasPais, setVendasPais] = useState([]);
+  const [vendasTemporal, setVendasTemporal] = useState([]);
   const [segmentacao, setSegmentacao] = useState([]);
+  const [rankingProdutos, setRankingProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Filtros para análise temporal
+  const [filtrosPeriodo, setFiltrosPeriodo] = useState({
+    periodo: 'mensal',
+    metrica: 'valor'
+  });
+  
+  // Filtros para ranking de produtos
+  const [filtrosProdutos, setFiltrosProdutos] = useState({
+    ordenar_por: 'valor',
+    limit: 10
+  });
 
   useEffect(() => {
     loadDashboardData();
   }, []);
+
+  useEffect(() => {
+    loadVendasTemporais();
+  }, [filtrosPeriodo]);
+
+  useEffect(() => {
+    loadRankingProdutos();
+  }, [filtrosProdutos]);
+
+  const loadVendasTemporais = async () => {
+    try {
+      const response = await getVendasTemporal(filtrosPeriodo);
+      setVendasTemporal(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar vendas temporais:', error);
+    }
+  };
+
+  const loadRankingProdutos = async () => {
+    try {
+      const response = await getRankingProdutosDetalhado(filtrosProdutos);
+      setRankingProdutos(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar ranking de produtos:', error);
+    }
+  };
 
   const loadDashboardData = async () => {
     try {
@@ -37,6 +77,7 @@ function Dashboard() {
         produtosRes, 
         uvaRes, 
         paisRes,
+        temporalRes,
         segmentacaoRes
       ] = await Promise.all([
         getDashboardStats(),
@@ -44,11 +85,13 @@ function Dashboard() {
         getTopProdutos(5),
         getVendasTipoUva(),
         getVendasPais(),
+        getVendasTemporal(),
         getSegmentacao()
       ]);
 
       setStats(statsRes.data);
       setTopClientes(clientesRes.data);
+      setVendasTemporal(temporalRes.data);
       setTopProdutos(produtosRes.data);
       
       // Transformar dados para gráficos
@@ -134,16 +177,16 @@ function Dashboard() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Vendas por Tipo de Uva */}
-        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+        <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4 flex items-center px-3 pt-3">
             <Wine className="h-5 w-5 mr-2 text-red-500" />
             Vendas por Tipo de Uva
           </h3>
-          <ResponsiveContainer width="100%" height={350}>
+          <ResponsiveContainer width="100%" height={300}>
             <BarChart 
               data={vendasUva} 
               layout="vertical"
-              margin={{ top: 10, right: 80, left: 100, bottom: 10 }}
+              margin={{ top: 5, right: 50, left: 40, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis type="number" stroke="#9ca3af" />
@@ -161,7 +204,7 @@ function Dashboard() {
                 dataKey="value" 
                 fill="#dc2626"
                 radius={[0, 8, 8, 0]}
-                barSize={30}
+                barSize={25}
                 label={{ 
                   position: 'right',
                   fill: '#fff',
@@ -203,6 +246,89 @@ function Dashboard() {
         </div>
       </div>
 
+      {/* Gráfico de Vendas Temporais */}
+      <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+          <h3 className="text-lg font-semibold text-white flex items-center mb-4 md:mb-0">
+            <TrendingUp className="h-5 w-5 mr-2 text-green-500" />
+            Análise Temporal de Vendas
+          </h3>
+          
+          {/* Filtros */}
+          <div className="flex gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-400">Período:</label>
+              <select 
+                value={filtrosPeriodo.periodo}
+                onChange={(e) => setFiltrosPeriodo({...filtrosPeriodo, periodo: e.target.value})}
+                className="bg-slate-700 text-white text-sm rounded px-3 py-1.5 border border-slate-600 focus:outline-none focus:border-green-500"
+              >
+                <option value="diario">Diário</option>
+                <option value="semanal">Semanal</option>
+                <option value="mensal">Mensal</option>
+              </select>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-400">Métrica:</label>
+              <select 
+                value={filtrosPeriodo.metrica}
+                onChange={(e) => setFiltrosPeriodo({...filtrosPeriodo, metrica: e.target.value})}
+                className="bg-slate-700 text-white text-sm rounded px-3 py-1.5 border border-slate-600 focus:outline-none focus:border-green-500"
+              >
+                <option value="valor">Valor (R$)</option>
+                <option value="quantidade">Quantidade</option>
+                <option value="ticket_medio">Ticket Médio</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <div style={{ 
+            minWidth: filtrosPeriodo.periodo === 'diario' ? `${Math.max(vendasTemporal.length * 80, 2000)}px` : '100%' 
+          }}>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={vendasTemporal}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis 
+                  dataKey="periodo" 
+                  stroke="#9ca3af"
+                  angle={-45}
+                  textAnchor="end"
+                  height={80}
+                  interval={0}
+                  tick={{ fontSize: 9 }}
+                />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
+                  labelStyle={{ color: '#fff' }}
+                  formatter={(value) => {
+                    const metricaAtual = filtrosPeriodo.metrica;
+                    if (metricaAtual === 'valor' || metricaAtual === 'ticket_medio') {
+                      return [`R$ ${value.toFixed(2)}`, metricaAtual === 'valor' ? 'Vendas' : 'Ticket Médio'];
+                    } else if (metricaAtual === 'quantidade') {
+                      return [`${value} itens`, 'Quantidade'];
+                    } else {
+                      return [`${value} compras`, 'Nº de Compras'];
+                    }
+                  }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey={filtrosPeriodo.metrica}
+                  stroke="#10b981" 
+                  strokeWidth={3}
+                  dot={{ fill: '#10b981', r: 5 }}
+                  activeDot={{ r: 7 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
       {/* Segmentação de Clientes */}
       <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 mb-8">
         <h3 className="text-lg font-semibold text-white mb-4">
@@ -223,6 +349,84 @@ function Dashboard() {
             <Bar yAxisId="right" dataKey="gasto_medio" fill="#10b981" name="Gasto Médio" />
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Ranking Detalhado de Produtos */}
+      <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+          <h3 className="text-lg font-semibold text-white flex items-center mb-4 md:mb-0">
+            <Wine className="h-5 w-5 mr-2 text-red-500" />
+            Ranking Detalhado de Produtos
+          </h3>
+          
+          {/* Filtros */}
+          <div className="flex gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-400">Ordenar por:</label>
+              <select 
+                value={filtrosProdutos.ordenar_por}
+                onChange={(e) => setFiltrosProdutos({...filtrosProdutos, ordenar_por: e.target.value})}
+                className="bg-slate-700 text-white text-sm rounded px-3 py-1.5 border border-slate-600 focus:outline-none focus:border-red-500"
+              >
+                <option value="valor">Receita (R$)</option>
+                <option value="quantidade">Quantidade Vendida</option>
+                <option value="ticket_medio">Ticket Médio</option>
+              </select>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-slate-400">Exibir:</label>
+              <select 
+                value={filtrosProdutos.limit}
+                onChange={(e) => setFiltrosProdutos({...filtrosProdutos, limit: parseInt(e.target.value)})}
+                className="bg-slate-700 text-white text-sm rounded px-3 py-1.5 border border-slate-600 focus:outline-none focus:border-red-500"
+              >
+                <option value="5">Top 5</option>
+                <option value="10">Top 10</option>
+                <option value="20">Top 20</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-700">
+            <thead>
+              <tr className="bg-slate-900">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Produto</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">País</th>
+                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase">Safra</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase">Tipo de Uva</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Receita</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Qtd</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Ticket Médio</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold text-slate-300 uppercase">Vendas</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700">
+              {rankingProdutos.map((produto, idx) => (
+                <tr key={produto.produto_id} className="hover:bg-slate-750 transition-colors">
+                  <td className="px-4 py-3 text-sm text-white font-medium">{produto.nome}</td>
+                  <td className="px-4 py-3 text-sm text-slate-300">{produto.pais}</td>
+                  <td className="px-4 py-3 text-sm text-slate-300 text-center">{produto.safra}</td>
+                  <td className="px-4 py-3 text-sm text-slate-300">{produto.tipo_uva}</td>
+                  <td className="px-4 py-3 text-sm text-green-400 text-right font-semibold">
+                    R$ {produto.valor.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-blue-400 text-right font-medium">
+                    {produto.quantidade}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-purple-400 text-right font-medium">
+                    R$ {produto.ticket_medio.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-slate-400 text-right">
+                    {produto.num_vendas}x
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Tables Row */}

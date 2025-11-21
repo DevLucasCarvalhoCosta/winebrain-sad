@@ -1,5 +1,5 @@
 {
-  "data_analise": "2025-11-20T00:32:55.884733",
+  "data_analise": "2025-11-20T23:09:04.081910",
   "total_clientes": 100,
   "estatisticas_engajamento": {
     "media": 6.079199999999999,
@@ -7,10 +7,10 @@
     "max": 9.88
   },
   "estatisticas_financeiras": {
-    "total_gasto_medio": 68.8539,
+    "total_gasto_medio": 190.78630000000004,
     "total_gasto_min": 0.0,
-    "total_gasto_max": 386.5,
-    "ticket_medio": 68.8539
+    "total_gasto_max": 897.1700000000001,
+    "ticket_medio": 133.6261066666667
   },
   "segmentacao": {
     "cancelamentos": {

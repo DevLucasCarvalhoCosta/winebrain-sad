@@ -1,0 +1,101 @@
+﻿compra_id,cliente_id,produto_id,valor,quantidade,data_compra,nome_x,pais,safra,tipo_uva,nome_y,idade,cidade,pontuacao_engajamento,assinante_clube,cancelou_assinatura
+1,13,47,84.79,1,2023-01-19,Vinho 47,Espanha,2022,Cabernet Sauvignon,Cliente 13,37,São Paulo,2.55,Sim,Sim
+2,11,67,358.65,2,2023-03-27,Vinho 67,Brasil,2020,Merlot,Cliente 11,51,Rio de Janeiro,1.63,Sim,Sim
+3,21,94,93.28,5,2023-08-14,Vinho 94,França,2022,Cabernet Sauvignon,Cliente 21,26,Salvador,9.81,Não,Não
+4,52,11,66.31,4,2023-02-10,Vinho 11,Brasil,2021,Chardonnay,Cliente 52,39,Goiânia,5.41,Sim,Sim
+5,29,20,241.08,1,2023-07-22,Vinho 20,Itália,2018,Chardonnay,Cliente 29,38,Curitiba,4.88,Não,Sim
+6,61,82,278.11,3,2023-06-01,Vinho 82,Chile,2019,Chardonnay,Cliente 61,60,São Paulo,7.61,Sim,Não
+7,28,18,123.87,2,2023-12-26,Vinho 18,Chile,2021,Tempranillo,Cliente 28,56,Goiânia,5.27,Sim,Não
+8,7,66,234.0,2,2023-04-12,Vinho 66,Chile,2019,Malbec,Cliente 7,68,Rio de Janeiro,5.91,Sim,Não
+9,19,40,299.31,1,2023-10-03,Vinho 40,Argentina,2021,Syrah,Cliente 19,29,Goiânia,5.01,Sim,Sim
+10,10,34,310.92,4,2023-09-05,Vinho 34,Chile,2023,Malbec,Cliente 10,65,Belo Horizonte,3.27,Sim,Sim
+11,16,8,190.38,2,2023-11-15,Vinho 8,África do Sul,2020,Tempranillo,Cliente 16,62,Belo Horizonte,8.45,Sim,Não
+12,18,57,124.72,1,2023-05-08,Vinho 57,África do Sul,2019,Merlot,Cliente 18,44,Fortaleza,6.61,Não,Não
+13,14,15,227.69,3,2023-03-20,Vinho 15,Portugal,2021,Pinot Noir,Cliente 14,42,Curitiba,6.47,Sim,Não
+14,77,33,62.9,6,2023-12-08,Vinho 33,África do Sul,2019,Sauvignon Blanc,Cliente 77,30,Goiânia,7.41,Sim,Não
+15,20,96,146.44,1,2023-06-28,Vinho 96,Argentina,2023,Sauvignon Blanc,Cliente 20,53,Brasília,6.18,Sim,Não
+16,54,17,161.35,2,2023-08-30,Vinho 17,África do Sul,2022,Syrah,Cliente 54,35,Salvador,4.67,Sim,Sim
+17,84,87,211.08,5,2023-02-03,Vinho 87,Espanha,2023,Chardonnay,Cliente 84,42,Salvador,5.33,Não,Sim
+18,11,91,92.55,4,2023-10-12,Vinho 91,Brasil,2023,Pinot Noir,Cliente 11,51,Rio de Janeiro,1.63,Sim,Sim
+19,27,44,288.18,3,2023-07-01,Vinho 44,Itália,2019,Merlot,Cliente 27,44,São Paulo,7.38,Sim,Não
+20,31,69,133.39,3,2023-11-04,Vinho 69,Portugal,2021,Cabernet Sauvignon,Cliente 31,29,Belo Horizonte,9.21,Sim,Não
+21,45,4,129.67,1,2023-03-06,Vinho 4,Itália,2022,Cabernet Sauvignon,Cliente 45,46,São Paulo,5.33,Sim,Não
+22,56,22,232.61,1,2023-05-18,Vinho 22,França,2022,Malbec,Cliente 56,42,Rio de Janeiro,7.39,Sim,Sim
+23,96,86,186.12,2,2023-01-27,Vinho 86,França,2019,Sauvignon Blanc,Cliente 96,48,São Paulo,5.19,Não,Sim
+24,95,3,173.06,4,2023-09-09,Vinho 3,Chile,2021,Chardonnay,Cliente 95,35,Rio de Janeiro,7.76,Sim,Sim
+25,41,3,258.96,5,2023-06-15,Vinho 3,Chile,2021,Chardonnay,Cliente 41,50,Brasília,8.44,Não,Não
+26,60,52,101.44,1,2023-08-20,Vinho 52,Itália,2020,Cabernet Sauvignon,Cliente 60,36,Goiânia,4.88,Não,Sim
+27,89,78,113.11,2,2023-10-24,Vinho 78,França,2021,Pinot Noir,Cliente 89,29,Rio de Janeiro,4.69,Sim,Sim
+28,43,46,386.5,3,2023-07-07,Vinho 46,França,2021,Sauvignon Blanc,Cliente 43,59,Goiânia,6.72,Não,Não
+29,30,33,243.35,2,2023-06-06,Vinho 33,África do Sul,2019,Sauvignon Blanc,Cliente 30,41,Fortaleza,6.62,Sim,Não
+30,36,9,177.07,3,2023-11-23,Vinho 9,Chile,2022,Cabernet Sauvignon,Cliente 36,48,Fortaleza,2.68,Não,Sim
+31,87,31,102.69,1,2023-05-31,Vinho 31,Espanha,2018,Chardonnay,Cliente 87,34,Brasília,3.54,Não,Sim
+32,74,81,287.78,5,2023-12-04,Vinho 81,África do Sul,2023,Merlot,Cliente 74,28,Curitiba,7.84,Sim,Não
+33,58,12,264.47,1,2023-04-05,Vinho 12,Itália,2023,Merlot,Cliente 58,66,Curitiba,6.91,Sim,Não
+34,8,83,339.64,3,2023-02-14,Vinho 83,Brasil,2021,Cabernet Sauvignon,Cliente 8,54,Brasília,9.88,Sim,Sim
+35,34,99,96.8,1,2023-03-29,Vinho 99,Brasil,2022,Chardonnay,Cliente 34,45,Goiânia,7.73,Sim,Sim
+36,14,60,192.73,1,2023-09-21,Vinho 60,Itália,2018,Syrah,Cliente 14,42,Curitiba,6.47,Sim,Não
+37,20,100,94.99,6,2023-01-12,Vinho 100,Itália,2021,Tempranillo,Cliente 20,53,Brasília,6.18,Sim,Não
+38,82,69,295.59,3,2023-06-19,Vinho 69,Portugal,2021,Cabernet Sauvignon,Cliente 82,46,Rio de Janeiro,8.14,Sim,Sim
+39,62,38,258.39,4,2023-08-22,Vinho 38,França,2022,Pinot Noir,Cliente 62,30,Brasília,8.46,Sim,Sim
+40,29,85,134.12,2,2023-03-07,Vinho 85,Portugal,2020,Pinot Noir,Cliente 29,38,Curitiba,4.88,Não,Sim
+41,92,92,97.13,2,2023-09-02,Vinho 92,Itália,2019,Tempranillo,Cliente 92,27,Curitiba,7.33,Sim,Não
+42,25,75,390.38,1,2023-02-20,Vinho 75,Brasil,2019,Merlot,Cliente 25,30,Rio de Janeiro,6.53,Sim,Não
+43,8,89,111.44,4,2023-07-13,Vinho 89,África do Sul,2018,Syrah,Cliente 8,54,Brasília,9.88,Sim,Sim
+44,83,77,71.87,2,2023-05-24,Vinho 77,Portugal,2018,Cabernet Sauvignon,Cliente 83,36,Belo Horizonte,7.26,Sim,Não
+45,53,55,124.73,4,2023-06-08,Vinho 55,Espanha,2020,Malbec,Cliente 53,48,Belo Horizonte,6.78,Sim,Não
+46,27,87,191.41,2,2023-10-18,Vinho 87,Espanha,2023,Chardonnay,Cliente 27,44,São Paulo,7.38,Sim,Não
+47,31,54,241.7,5,2023-12-22,Vinho 54,França,2021,Pinot Noir,Cliente 31,29,Belo Horizonte,9.21,Sim,Não
+48,97,37,160.33,2,2023-01-06,Vinho 37,Portugal,2018,Merlot,Cliente 97,59,Belo Horizonte,4.27,Sim,Não
+49,5,64,108.27,3,2023-04-14,Vinho 64,Argentina,2021,Pinot Noir,Cliente 5,60,Brasília,3.29,Sim,Não
+50,71,16,313.02,1,2023-11-28,Vinho 16,França,2020,Sauvignon Blanc,Cliente 71,40,Goiânia,5.14,Não,Sim
+51,1,24,156.79,1,2023-07-19,Vinho 24,Argentina,2021,Tempranillo,Cliente 1,66,Fortaleza,4.45,Não,Sim
+52,62,10,226.3,3,2023-02-01,Vinho 10,França,2017,Syrah,Cliente 62,30,Brasília,8.46,Sim,Sim
+53,89,63,175.94,2,2023-03-13,Vinho 63,Espanha,2020,Chardonnay,Cliente 89,29,Rio de Janeiro,4.69,Sim,Sim
+54,10,57,242.88,4,2023-06-03,Vinho 57,África do Sul,2019,Merlot,Cliente 10,65,Belo Horizonte,3.27,Sim,Sim
+55,83,26,85.63,1,2023-05-05,Vinho 26,Chile,2023,Chardonnay,Cliente 83,36,Belo Horizonte,7.26,Sim,Não
+56,46,45,298.97,3,2023-08-27,Vinho 45,Portugal,2020,Malbec,Cliente 46,40,Salvador,4.23,Não,Sim
+57,44,82,234.47,2,2023-09-25,Vinho 82,Chile,2019,Chardonnay,Cliente 44,36,Fortaleza,7.18,Sim,Sim
+58,72,51,118.15,1,2023-11-07,Vinho 51,Brasil,2019,Tempranillo,Cliente 72,38,Salvador,8.36,Sim,Não
+59,32,68,267.83,4,2023-03-02,Vinho 68,Itália,2022,Chardonnay,Cliente 32,60,Salvador,3.74,Não,Sim
+60,76,59,368.23,5,2023-12-11,Vinho 59,Brasil,2021,Cabernet Sauvignon,Cliente 76,44,São Paulo,5.92,Sim,Não
+61,3,47,70.84,2,2023-01-23,Vinho 47,Espanha,2022,Cabernet Sauvignon,Cliente 3,41,Belo Horizonte,6.31,Sim,Não
+62,93,79,81.49,2,2023-07-02,Vinho 79,Espanha,2022,Malbec,Cliente 93,55,Goiânia,3.88,Não,Sim
+63,97,35,103.21,3,2023-04-10,Vinho 35,Brasil,2020,Syrah,Cliente 97,59,Belo Horizonte,4.27,Sim,Não
+64,80,23,174.57,4,2023-02-09,Vinho 23,Espanha,2023,Pinot Noir,Cliente 80,50,Curitiba,3.68,Não,Sim
+65,26,87,266.73,1,2023-06-13,Vinho 87,Espanha,2023,Chardonnay,Cliente 26,31,Brasília,6.91,Não,Não
+66,96,89,313.44,2,2023-10-26,Vinho 89,África do Sul,2018,Syrah,Cliente 96,48,São Paulo,5.19,Não,Sim
+67,57,95,271.67,3,2023-03-15,Vinho 95,Espanha,2020,Malbec,Cliente 57,31,Brasília,2.83,Não,Sim
+68,59,78,90.02,6,2023-12-06,Vinho 78,França,2021,Pinot Noir,Cliente 59,28,Fortaleza,5.77,Sim,Sim
+69,40,36,112.65,1,2023-09-17,Vinho 36,Itália,2021,Tempranillo,Cliente 40,27,Curitiba,5.67,Sim,Não
+70,68,71,78.35,2,2023-11-18,Vinho 71,Espanha,2018,Pinot Noir,Cliente 68,47,São Paulo,3.94,Sim,Sim
+71,90,91,84.91,3,2023-08-10,Vinho 91,Brasil,2023,Pinot Noir,Cliente 90,63,Fortaleza,5.94,Sim,Não
+72,41,72,339.71,2,2023-05-12,Vinho 72,Argentina,2019,Sauvignon Blanc,Cliente 41,50,Brasília,8.44,Não,Não
+73,78,28,198.67,1,2023-07-24,Vinho 28,Itália,2022,Sauvignon Blanc,Cliente 78,58,Salvador,4.86,Não,Sim
+74,14,60,132.05,5,2023-06-26,Vinho 60,Itália,2018,Syrah,Cliente 14,42,Curitiba,6.47,Sim,Não
+75,99,97,237.4,1,2023-04-07,Vinho 97,África do Sul,2020,Syrah,Cliente 99,45,Brasília,8.67,Sim,Não
+76,66,100,254.73,2,2023-05-28,Vinho 100,Itália,2021,Tempranillo,Cliente 66,41,Fortaleza,5.53,Não,Sim
+77,53,16,159.65,1,2023-09-01,Vinho 16,França,2020,Sauvignon Blanc,Cliente 53,48,Belo Horizonte,6.78,Sim,Não
+78,65,60,126.18,2,2023-07-09,Vinho 60,Itália,2018,Syrah,Cliente 65,53,Salvador,4.21,Sim,Sim
+79,20,49,187.44,3,2023-02-17,Vinho 49,África do Sul,2018,Syrah,Cliente 20,53,Brasília,6.18,Sim,Não
+80,5,21,308.56,4,2023-08-29,Vinho 21,Portugal,2019,Cabernet Sauvignon,Cliente 5,60,Brasília,3.29,Sim,Não
+81,90,33,94.76,1,2023-04-03,Vinho 33,África do Sul,2019,Sauvignon Blanc,Cliente 90,63,Fortaleza,5.94,Sim,Não
+82,54,56,271.36,5,2023-11-10,Vinho 56,Argentina,2022,Sauvignon Blanc,Cliente 54,35,Salvador,4.67,Sim,Sim
+83,36,70,109.07,2,2023-12-20,Vinho 70,França,2023,Tempranillo,Cliente 36,48,Fortaleza,2.68,Não,Sim
+84,79,26,195.78,3,2023-01-30,Vinho 26,Chile,2023,Chardonnay,Cliente 79,39,Brasília,6.23,Sim,Não
+85,13,38,317.99,2,2023-03-18,Vinho 38,França,2022,Pinot Noir,Cliente 13,37,São Paulo,2.55,Sim,Sim
+86,35,76,221.88,4,2023-06-22,Vinho 76,Itália,2023,Chardonnay,Cliente 35,52,Brasília,8.09,Sim,Não
+87,22,39,258.19,2,2023-07-27,Vinho 39,Espanha,2019,Cabernet Sauvignon,Cliente 22,40,Goiânia,2.66,Não,Sim
+88,31,67,161.64,1,2023-10-08,Vinho 67,Brasil,2020,Merlot,Cliente 31,29,Belo Horizonte,9.21,Sim,Não
+89,14,12,100.93,3,2023-02-12,Vinho 12,Itália,2023,Merlot,Cliente 14,42,Curitiba,6.47,Sim,Não
+90,75,32,154.82,1,2023-05-02,Vinho 32,Argentina,2022,Merlot,Cliente 75,55,Fortaleza,6.65,Não,Sim
+91,46,85,295.12,2,2023-06-18,Vinho 85,Portugal,2020,Pinot Noir,Cliente 46,40,Salvador,4.23,Não,Sim
+92,81,20,243.4,2,2023-08-05,Vinho 20,Itália,2018,Chardonnay,Cliente 81,32,Fortaleza,6.74,Sim,Não
+93,2,29,210.55,3,2023-09-14,Vinho 29,Portugal,2021,Pinot Noir,Cliente 2,32,Salvador,9.57,Sim,Não
+94,22,4,88.79,4,2023-11-20,Vinho 4,Itália,2022,Cabernet Sauvignon,Cliente 22,40,Goiânia,2.66,Não,Sim
+95,100,40,123.33,1,2023-01-14,Vinho 40,Argentina,2021,Syrah,Cliente 100,37,Goiânia,5.36,Não,Sim
+96,43,44,219.8,2,2023-03-04,Vinho 44,Itália,2019,Merlot,Cliente 43,59,Goiânia,6.72,Não,Não
+97,25,66,164.96,5,2023-04-25,Vinho 66,Chile,2019,Malbec,Cliente 25,30,Rio de Janeiro,6.53,Sim,Não
+98,9,55,132.79,2,2023-12-01,Vinho 55,Espanha,2020,Malbec,Cliente 9,47,Fortaleza,8.14,Sim,Não
+99,91,90,93.87,1,2023-07-06,Vinho 90,Chile,2020,Merlot,Cliente 91,38,Belo Horizonte,8.51,Não,Não
+100,14,19,243.77,3,2023-10-30,Vinho 19,Brasil,2020,Merlot,Cliente 14,42,Curitiba,6.47,Sim,Não

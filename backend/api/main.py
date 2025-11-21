@@ -329,6 +329,53 @@ async def get_top_produtos(limit: int = Query(default=5, ge=1, le=20)):
     return vendas_agg.to_dict('records')
 
 
+@app.get("/api/dashboard/produtos/ranking-detalhado")
+async def get_ranking_produtos_detalhado(
+    limit: int = Query(default=10, ge=1, le=50),
+    ordenar_por: str = Query("valor", regex="^(valor|quantidade|ticket_medio)$")
+):
+    """
+    Retorna ranking detalhado de produtos com todas as métricas
+    
+    Parâmetros:
+    - limit: quantidade de produtos a retornar
+    - ordenar_por: valor (receita), quantidade, ticket_medio
+    """
+    
+    if compras_df is None or produtos_df is None:
+        raise HTTPException(status_code=503, detail="Dados não carregados")
+    
+    # Merge completo
+    vendas = compras_df.merge(produtos_df, on='produto_id')
+    
+    # Agregação com todas as métricas
+    ranking = vendas.groupby(['produto_id', 'nome', 'pais', 'safra', 'tipo_uva']).agg({
+        'valor': 'sum',
+        'quantidade': 'sum',
+        'compra_id': 'count'
+    }).reset_index()
+    
+    # Calcular ticket médio
+    ranking['ticket_medio'] = ranking['valor'] / ranking['compra_id']
+    ranking = ranking.rename(columns={'compra_id': 'num_vendas'})
+    
+    # Ordenar
+    ranking = ranking.sort_values(ordenar_por, ascending=False).head(limit)
+    
+    # Formatar para JSON
+    resultado = ranking.to_dict('records')
+    
+    # Converter valores para tipos corretos
+    for item in resultado:
+        item['valor'] = float(item['valor'])
+        item['quantidade'] = int(item['quantidade'])
+        item['ticket_medio'] = float(item['ticket_medio'])
+        item['num_vendas'] = int(item['num_vendas'])
+        item['safra'] = int(item['safra'])
+    
+    return resultado
+
+
 @app.get("/api/dashboard/vendas/tipo-uva")
 async def get_vendas_tipo_uva():
     """Retorna vendas por tipo de uva"""
@@ -355,6 +402,84 @@ async def get_vendas_pais():
     vendas_pais = vendas.groupby('pais')['valor'].sum().sort_values(ascending=False)
     
     return vendas_pais.to_dict()
+
+
+@app.get("/api/dashboard/vendas/temporal")
+async def get_vendas_temporal(
+    periodo: str = Query("mensal", regex="^(diario|semanal|mensal)$"),
+    metrica: str = Query("valor", regex="^(valor|quantidade|ticket_medio|num_compras)$"),
+    data_inicio: Optional[str] = None,
+    data_fim: Optional[str] = None
+):
+    """
+    Retorna vendas ao longo do tempo com filtros
+    
+    Parâmetros:
+    - periodo: diario, semanal, mensal
+    - metrica: valor (R$), quantidade (itens), ticket_medio, num_compras
+    - data_inicio: formato YYYY-MM-DD (opcional)
+    - data_fim: formato YYYY-MM-DD (opcional)
+    """
+    
+    if compras_df is None:
+        raise HTTPException(status_code=503, detail="Dados não carregados")
+    
+    # Converter data_compra para datetime
+    df = compras_df.copy()
+    df['data_compra'] = pd.to_datetime(df['data_compra'])
+    
+    # Filtrar por período se especificado
+    if data_inicio:
+        df = df[df['data_compra'] >= pd.to_datetime(data_inicio)]
+    if data_fim:
+        df = df[df['data_compra'] <= pd.to_datetime(data_fim)]
+    
+    # Agrupar por período
+    if periodo == "diario":
+        df['periodo'] = df['data_compra'].dt.strftime('%Y-%m-%d')
+    elif periodo == "semanal":
+        # Formato: "02/01 a 08/01"
+        df['inicio_semana'] = df['data_compra'] - pd.to_timedelta(df['data_compra'].dt.dayofweek, unit='d')
+        df['fim_semana'] = df['inicio_semana'] + pd.Timedelta(days=6)
+        df['periodo'] = df['inicio_semana'].dt.strftime('%d/%m') + ' a ' + df['fim_semana'].dt.strftime('%d/%m')
+    else:  # mensal
+        df['periodo'] = df['data_compra'].dt.to_period('M').astype(str)
+    
+    # Calcular métrica escolhida
+    if metrica == "valor":
+        resultado_df = df.groupby('periodo')['valor'].sum().reset_index()
+        resultado_df.columns = ['periodo', 'valor']
+    elif metrica == "quantidade":
+        resultado_df = df.groupby('periodo')['quantidade'].sum().reset_index()
+        resultado_df.columns = ['periodo', 'quantidade']
+    elif metrica == "ticket_medio":
+        agrupado = df.groupby('periodo').agg({'valor': 'sum', 'compra_id': 'count'}).reset_index()
+        agrupado['ticket_medio'] = agrupado['valor'] / agrupado['compra_id']
+        resultado_df = agrupado[['periodo', 'ticket_medio']]
+    else:  # num_compras
+        resultado_df = df.groupby('periodo')['compra_id'].count().reset_index()
+        resultado_df.columns = ['periodo', 'num_compras']
+    
+    # Ordenar por período
+    resultado_df = resultado_df.sort_values('periodo')
+    
+    # Formatar para o frontend
+    resultado = resultado_df.to_dict('records')
+    
+    # Converter valores para float
+    for item in resultado:
+        for key, value in item.items():
+            if key != 'periodo' and pd.notna(value):
+                item[key] = float(value)
+    
+    # Log para debug
+    print(f"📊 Vendas Temporal - Período: {periodo}, Métrica: {metrica}")
+    print(f"   Total de registros retornados: {len(resultado)}")
+    if len(resultado) > 0:
+        print(f"   Primeiro: {resultado[0]}")
+        print(f"   Último: {resultado[-1]}")
+    
+    return resultado
 
 
 @app.get("/api/analytics/segmentacao")
