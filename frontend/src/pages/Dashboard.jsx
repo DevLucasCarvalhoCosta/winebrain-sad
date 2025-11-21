@@ -131,23 +131,44 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Charts Row 1 */}
+      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Vendas por Tipo de Uva */}
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-          <h3 className="text-lg font-semibold text-white mb-4">
+          <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+            <Wine className="h-5 w-5 mr-2 text-red-500" />
             Vendas por Tipo de Uva
           </h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={vendasUva}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="name" stroke="#9ca3af" />
-              <YAxis stroke="#9ca3af" />
+            <BarChart 
+              data={vendasUva} 
+              layout="horizontal"
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" horizontal={false} />
+              <XAxis type="number" stroke="#9ca3af" />
+              <YAxis 
+                type="category" 
+                dataKey="name" 
+                stroke="#9ca3af"
+                width={120}
+              />
               <Tooltip 
                 contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
                 labelStyle={{ color: '#fff' }}
+                formatter={(value) => [`R$ ${value.toFixed(2)}`, 'Vendas']}
               />
-              <Bar dataKey="value" fill="#ef4444" />
+              <Bar 
+                dataKey="value" 
+                fill="#dc2626"
+                radius={[0, 8, 8, 0]}
+                label={{ 
+                  position: 'right',
+                  fill: '#fff',
+                  fontSize: 12,
+                  formatter: (value) => `R$ ${value.toFixed(0)}`
+                }}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
