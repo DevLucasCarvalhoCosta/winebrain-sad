@@ -180,7 +180,7 @@ class RuleEngine:
     
     def _regra_risco_cancelamento(self, cancelou: bool, engajamento: float) -> bool:
         """REGRA 2: Risco de Cancelamento"""
-        return cancelou or engajamento < self.ENGAJAMENTO_BAIXO
+        return cancelou and engajamento < self.ENGAJAMENTO_BAIXO
     
     def _regra_oportunidade_upgrade(self, engajamento: float, n_compras: int) -> bool:
         """REGRA 3: Oportunidade de Upgrade"""
