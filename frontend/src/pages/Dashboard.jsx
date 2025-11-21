@@ -142,16 +142,15 @@ function Dashboard() {
           <ResponsiveContainer width="100%" height={300}>
             <BarChart 
               data={vendasUva} 
-              layout="horizontal"
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              layout="vertical"
+              margin={{ top: 5, right: 80, left: 100, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" horizontal={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis type="number" stroke="#9ca3af" />
               <YAxis 
                 type="category" 
                 dataKey="name" 
                 stroke="#9ca3af"
-                width={120}
               />
               <Tooltip 
                 contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
@@ -162,10 +161,12 @@ function Dashboard() {
                 dataKey="value" 
                 fill="#dc2626"
                 radius={[0, 8, 8, 0]}
+                barSize={25}
                 label={{ 
                   position: 'right',
                   fill: '#fff',
                   fontSize: 12,
+                  fontWeight: 600,
                   formatter: (value) => `R$ ${value.toFixed(0)}`
                 }}
               />
