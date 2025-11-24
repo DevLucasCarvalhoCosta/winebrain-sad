@@ -12,7 +12,21 @@ import {
   getVendasTipoUva, getVendasPais, getSegmentacao, getVendasTemporal 
 } from '../services/api';
 
-const COLORS = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+// Paleta expandida para suportar todos os países
+const COLORS = [
+  '#ef4444', // Vermelho
+  '#f59e0b', // Laranja
+  '#10b981', // Verde
+  '#3b82f6', // Azul
+  '#8b5cf6', // Roxo
+  '#ec4899', // Rosa
+  '#06b6d4', // Ciano
+  '#f43f5e', // Vermelho Rose
+  '#84cc16', // Lima
+  '#6366f1', // Índigo
+  '#14b8a6', // Teal
+  '#f97316'  // Laranja escuro
+];
 
 function Dashboard() {
   const [stats, setStats] = useState(null);
@@ -101,10 +115,11 @@ function Dashboard() {
           .slice(0, 5)
       );
       
+      // Exibir TODOS os países com vendas (não limitar a 5)
       setVendasPais(
         Object.entries(paisRes.data)
           .map(([name, value]) => ({ name, value }))
-          .slice(0, 5)
+          .sort((a, b) => b.value - a.value) // Ordenar do maior para o menor
       );
 
       setSegmentacao(segmentacaoRes.data);
