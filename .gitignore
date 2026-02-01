@@ -1,18 +1,51 @@
-# Python
+# ============================================
+# WineBrain - Git Ignore Configuration
+# ============================================
+
+# ---------- Python ----------
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
 venv/
 env/
 ENV/
-*.egg-info/
+.venv/
+
+# Testing
 .pytest_cache/
 .coverage
 htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
 
-# Node
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ---------- Node.js ----------
 node_modules/
 dist/
 build/
@@ -20,29 +53,70 @@ build/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
+package-lock.json
+yarn.lock
 
-# IDEs
+# ---------- IDEs & Editors ----------
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+*.sublime-workspace
+*.sublime-project
+.project
+.pydevproject
+.spyderproject
+.spyproject
 
-# OS
+# ---------- Operating System ----------
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+desktop.ini
 
-# Environment
+# ---------- Environment Variables ----------
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
 
-# Data (manter estrutura, ignorar conteúdo gerado)
-data/raw/*.csv
-data/processed/*.csv
-data/processed/*.json
-data/models/*.pkl
+# ---------- Logs & Debug ----------
+logs/
+*.log
+debug.log
 
-# Temporários
+# ---------- Temporary Files ----------
 *.tmp
+*.temp
 temp/
 tmp/
+.cache/
+
+# ---------- Data Files (keep structure, ignore generated) ----------
+# Raw data should not be in repo
+backend/app_data/raw/*.csv
+backend/app_data/processed/*.csv
+backend/app_data/processed/*.json
+backend/app_data/models/*.pkl
+
+# ---------- Jupyter Notebooks ----------
+.ipynb_checkpoints/
+*.ipynb
+
+# ---------- Build Artifacts ----------
+*.manifest
+*.spec
+
+# ---------- Excel/Data Source Files ----------
+*.xlsx
+*.xls
+docs/*.xlsx
+docs/*.xls
